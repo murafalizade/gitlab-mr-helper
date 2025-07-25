@@ -1,16 +1,17 @@
 {
-  "name": "gitlab-mr-helper",
+  "name": "gitlab-mr-cli",
   "version": "1.0.0",
+  "description": "CLI tool to check GitLab MRs across branches",
+  "main": "dist/index.js",
   "bin": {
-    "gitlab-mr": "src/index.ts"
+    "gitlab-mr": "./dist/index.js"
   },
   "scripts": {
-    "start": "tsx ./src/index.ts"
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["gitlab", "cli", "mr", "merge-request", "helper"],
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.1.0",
     "tsx": "^4.20.3"
@@ -23,3 +24,4 @@
     "typescript": "^5.8.3"
   }
 }
+

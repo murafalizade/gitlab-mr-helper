@@ -48,25 +48,25 @@ npx gitlab-mr config set-branches <project_id> dev test master
 * **Open MRs**
 
   ```bash
-  npx gitlab-mr list --open
+  npx gitlab-mr list open
   ```
 
 * **Merged MRs**
 
   ```bash
-  npx gitlab-mr list --merged
+  npx gitlab-mr list merged
   ```
 
 * **Closed MRs**
 
   ```bash
-  npx gitlab-mr list --closed
+  npx gitlab-mr list closed
   ```
 
 * **All MRs**
 
   ```bash
-  npx gitlab-mr list --all
+  npx gitlab-mr list all
   ```
 
 ---

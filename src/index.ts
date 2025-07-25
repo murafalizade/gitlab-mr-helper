@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from "commander";
 import { setToken, setUrl, setBranches } from "./libs/config";
 import {showMergeList} from "./commands/show-merge-list";
@@ -36,11 +38,10 @@ configCommand
 program.addCommand(configCommand);
 
 program
-    .command('list')
+    .command('list <option>')
     .description('List GitLab merge requests')
-    .option('--all', 'List all merge requests (not just assigned)')
-    .action(async (options:StateOptionType) => {
-        await showMergeList(options);
+    .action(async (option:StateOptionType) => {
+        await showMergeList(option);
     });
 
 
