@@ -43,16 +43,13 @@ program
         await showMergeList(options);
     });
 
-const show = new Command('show')
-    .description('Show details from GitLab');
 
-show
+program
     .command('env-diff <target> [mrId]')
     .description('Show environment diff against a target branch. Optionally provide a Merge Request ID.')
     .action(async (target, mrId) => {
         await trackDiffBranch( target, mrId );
     });
 
-program.addCommand(show);
 
 program.parseAsync(process.argv).then(() => console.log("Initialization complete."))
