@@ -78,13 +78,7 @@ Check if your merge requests have been fully integrated into the main branches (
 * **Full Environment Diff**
 
   ```bash
-  npx gitlab-mr show env-diff
-  ```
-
-* **Diff against a specific target branch (e.g. master)**
-
-  ```bash
-  npx gitlab-mr show env-diff --target master
+  npx gitlab-mr show env-diff <target_branch> [mr_id]
   ```
 
 ---
