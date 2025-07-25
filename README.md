@@ -9,7 +9,6 @@ A CLI tool to track your GitLab Merge Requests (MRs) across branches (like `dev`
 
 * 🔍 **List your merge requests** by state (`open`, `merged`, `closed`)
 * 📊 **Check MR propagation** across a defined branch order (e.g., `dev → test → master`)
-* 🧠 **AI-enhanced detection** for cherry-picks, rebases, or renamed commits
 * 🔔 **Optional reminders** if MRs are not yet fully merged to production branches
 
 ---
@@ -94,16 +93,14 @@ Check if your merge requests have been fully integrated into the main branches (
 
 * Fetches **your** merge requests (authored by you) with their commit SHAs.
 * Checks if those commits (or equivalent diffs) exist in each defined environment branch.
-* Uses AI (optional flag `--ai`) to compare diffs when commits are cherry-picked or rebased.
 
 ---
 
 ## 🚀 Upcoming Features
 
-* [ ] Slack/email notifications for stale MRs
-* [ ] MR approval tracking
-* [ ] Enhanced diff UI
-* [ ] GitHub support
+* [ ] GitHub/Bitbucket support
+* [ ] Reminder logic for stale MRs
+* [ ] AI based commit scoring
 
 ---
 

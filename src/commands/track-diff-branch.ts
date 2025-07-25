@@ -5,7 +5,7 @@ import {GitServices} from "../utils/git-services.ts";
 export const trackDiffBranch = async (targetBranch: string, mrId?: string) => {
     const git = new GitServices();
     const mrs = await git.fetchMergeRequests(StateOptionType.MERGED);
-    const targetMrList = mrId ? mrs.filter((mr) => String(mr.iid) === mrId) : mrs;
+    const targetMrList = mrId ? mrs.filter((mr: any) => String(mr.iid) === mrId) : mrs;
 
     const result: {
         id: number;
