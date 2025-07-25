@@ -39,8 +39,8 @@ program
     .command('list')
     .description('List GitLab merge requests')
     .option('--all', 'List all merge requests (not just assigned)')
-    .action((options:StateOptionType) => {
-        showMergeList(options);
+    .action(async (options:StateOptionType) => {
+        await showMergeList(options);
     });
 
 const show = new Command('show')
@@ -49,8 +49,8 @@ const show = new Command('show')
 show
     .command('env-diff <target> [mrId]')
     .description('Show environment diff against a target branch. Optionally provide a Merge Request ID.')
-    .action((target, mrId) => {
-        trackDiffBranch( target, mrId );
+    .action(async (target, mrId) => {
+        await trackDiffBranch( target, mrId );
     });
 
 program.addCommand(show);

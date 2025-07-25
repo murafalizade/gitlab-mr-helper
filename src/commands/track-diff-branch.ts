@@ -1,34 +1,39 @@
-import {loadConfig} from "../libs/config.ts";
+import {StateOptionType} from "../types/state-option.type.ts";
+import {isCommitEffectivelyInBranch} from "../utils/git-operations.ts";
+import {GitServices} from "../utils/git-services.ts";
 
-export const trackDiffBranch = (target: string, mrId: string) => {
-    const config = loadConfig();
+export const trackDiffBranch = async (targetBranch: string, mrId?: string) => {
+    const git = new GitServices();
+    const mrs = await git.fetchMergeRequests(StateOptionType.MERGED);
+    const targetMrList = mrId ? mrs.filter((mr) => String(mr.iid) === mrId) : mrs;
 
-    if(!config.projects|| !config.apiToken){
-        console.error("No projects configured");
-        throw new Error("No projects configured");
+    const result: {
+        id: number;
+        title: string;
+        exists: boolean;
+    }[] = [];
+
+    for (const mr of targetMrList) {
+        const commits = await git.fetchMergeCommits(mr);
+        const allCommitsExist = await Promise.all(
+            commits.map((commit) => {
+                return  isCommitEffectivelyInBranch(commit.id, targetBranch);
+            })
+        );
+
+        result.push({
+            id: mr.iid,
+            title: mr.title,
+            exists: allCommitsExist.every(Boolean),
+        });
     }
 
-    Object.entries(config.projects).forEach(([projectName, branches]) => {
-        console.log(`📁 Project: ${projectName}`);
-
-        // Generate 3 fake commits per project
-        const fakeCommits = [
-            '!123 Fix login issue',
-            '!124 Add new dashboard',
-            '!125 Cleanup styles'
-        ];
-
-        const data = fakeCommits.map((commit, i) => {
-            const row: Record<string, string> = {commit};
-
-            // For each branch in the config, randomly assign ✅ or ❌
-            branches.forEach(branch => {
-                row[branch] = Math.random() > 0.5 ? '✅' : '❌';
-            });
-
-            return row;
-        });
-
-        console.table(data);
-    });
+    // Output result
+    console.table(
+        result.map((r) => ({
+            'MR ID': `!${r.id}`,
+            Title: r.title,
+            'Exists on Target': r.exists ? '✅ Yes' : '❌ No',
+        }))
+    );
 };

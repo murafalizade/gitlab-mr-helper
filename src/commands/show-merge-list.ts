@@ -1,17 +1,21 @@
-import {loadConfig} from "../libs/config.ts";
 import {StateOptionType} from "../types/state-option.type.ts";
+import {GitServices} from "../utils/git-services.ts";
 
-export const showMergeList= (state: StateOptionType)  => {
-    const config = loadConfig();
+export const showMergeList = async (state: StateOptionType)  => {
+    try {
+        const git = new GitServices();
+        const mrs = await git.fetchMergeRequests(state);
 
-    if(!config.projects|| !config.apiToken){
-        console.error("No projects configured");
-        throw new Error("No projects configured");
+        if (mrs.length === 0) {
+            console.log('No merge requests found.');
+            return;
+        }
+
+        console.log(`[Merge Requests: ${state.toUpperCase()}]`);
+
+        console.log(JSON.stringify(mrs));
+    } catch (err) {
+        console.error('Failed to load merge requests:', err.message || err);
     }
-
-    // Filter merge request based on state
-    console.log('[ALL MRs]');
-    console.log('- !123 Fix login issue: MERGED');
-    console.log('- !124 Add unit tests: CLOSED');
 };
 
