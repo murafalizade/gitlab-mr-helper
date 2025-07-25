@@ -2,7 +2,7 @@
   "name": "gitlab-mr-helper",
   "version": "1.0.0",
   "bin": {
-    "gitlab-mr": "./index.ts"
+    "gitlab-mr": "src/index.ts"
   },
   "scripts": {
     "start": "tsx ./src/index.ts"
