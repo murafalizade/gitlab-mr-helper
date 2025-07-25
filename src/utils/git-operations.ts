@@ -1,33 +1,3 @@
-import { exec } from 'child_process';
-
-/*
-   * @deprecate
- */
-export  function checkBranchMerged(targetBranch: string, sourceBranch: string): Promise<{ missing: string[], present: string[] }> {
-    return new Promise((resolve, reject) => {
-        exec(`git cherry ${targetBranch} ${sourceBranch}`, (error, stdout, stderr) => {
-            if (error) {
-                return reject(error);
-            }
-
-            const missing: string[] = [];
-            const present: string[] = [];
-
-            stdout.split('\n').forEach(line => {
-                if (!line.trim()) return;
-
-                const sign = line[0];
-                const sha = line.slice(2);
-
-                if (sign === '+') missing.push(sha);
-                else if (sign === '-') present.push(sha);
-            });
-
-            resolve({ missing, present });
-        });
-    });
-}
-
 import { execSync } from 'child_process';
 
 /**
@@ -39,7 +9,7 @@ const getPatchId = (commitSha: string): string | null => {
             encoding: 'utf8',
         });
         return patch.trim().split(' ')[0]; // format: "<patch-id> <commit-sha>"
-    } catch (e) {
+    } catch (e:any) {
         console.warn(`Failed to get patch-id for ${commitSha}: ${e.message}`);
         return null;
     }
@@ -58,7 +28,7 @@ const getPatchIdsFromBranch = (branch: string): string[] => {
             .split('\n')
             .map((line) => line.trim().split(' ')[0])
             .filter((line) => !!line);
-    } catch (e) {
+    } catch (e:any) {
         console.warn(`Failed to get patch-ids from ${branch}: ${e.message}`);
         return [];
     }

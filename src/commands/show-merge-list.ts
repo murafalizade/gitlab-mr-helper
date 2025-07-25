@@ -14,7 +14,7 @@ export const showMergeList = async (state: StateOptionType)  => {
         console.log(`[Merge Requests: ${state.toUpperCase()}]`);
 
         console.log(JSON.stringify(mrs));
-    } catch (err) {
+    } catch (err:any) {
         console.error('Failed to load merge requests:', err.message || err);
     }
 };
