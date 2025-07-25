@@ -1,5 +1,8 @@
 import { Command } from "commander";
 import { setToken, setUrl, setBranches } from "./libs/config.ts";
+import {showMergeList} from "./commands/showMergeList.ts";
+import {writer} from "./utils/writer.ts";
+import {trackRequestBranch} from "./commands/trackRequestBranch.ts";
 
 const program = new Command();
 
@@ -32,7 +35,24 @@ configCommand
 // Register `config` group to main program
 program.addCommand(configCommand);
 
-// Other commands (list, show) can go here...
-program.addCommand(new Command("list").description("List all merge requests"));
+program
+    .command('list')
+    .description('List GitLab merge requests')
+    .option('--all', 'List all merge requests (not just assigned)')
+    .action((options:string) => {
+        showMergeList(options);
+    });
+
+const show = new Command('show')
+    .description('Show details from GitLab');
+
+show
+    .command('env-diff <target> [mrId]')
+    .description('Show environment diff against a target branch. Optionally provide a Merge Request ID.')
+    .action((target, mrId) => {
+        trackRequestBranch( target, mrId );
+    });
+
+program.addCommand(show);
 
 program.parseAsync(process.argv).then(() => console.log("Initialization complete."))
