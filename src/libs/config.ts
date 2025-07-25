@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const configPath = path.resolve(process.env.HOME || ".", ".gitlab-mrrc");
+const configPath = path.resolve(process.cwd(), ".gitlab-mrrc");
 
 export interface GitlabMRConfig {
     apiToken: string;

@@ -1,14 +1,20 @@
-import {StateOptionType} from "../types/state-option.type.ts";
-import {isCommitEffectivelyInBranch} from "../utils/git-operations.ts";
-import {GitServices} from "../utils/git-services.ts";
+import {StateOptionType} from "../types/state-option.type";
+import {isCommitEffectivelyInBranch} from "../utils/git-operations";
+import {GitServices} from "../utils/git-services";
 
 export const trackDiffBranch = async (targetBranch: string, mrId?: string) => {
     const git = new GitServices();
     const mrs = await git.fetchMergeRequests(StateOptionType.MERGED);
+
+    if(!mrs || mrs.length === 0) {
+        console.log('No merge requests found.');
+        return;
+    }
+
     const targetMrList = mrId ? mrs.filter((mr: any) => String(mr.iid) === mrId) : mrs;
 
     const result: {
-        id: number;
+        id: string;
         title: string;
         exists: boolean;
     }[] = [];

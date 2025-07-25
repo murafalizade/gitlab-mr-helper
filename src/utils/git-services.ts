@@ -1,6 +1,7 @@
 import axios from 'axios';
-import {GitlabMRConfig, loadConfig} from "../libs/config.ts";
-import {StateOptionType} from "../types/state-option.type.ts";
+import {GitlabMRConfig, loadConfig} from "../libs/config";
+import {StateOptionType} from "../types/state-option.type";
+import {MergeRequest} from "../types/merge-request.type";
 
 export class GitServices {
      config:GitlabMRConfig;
@@ -24,9 +25,9 @@ export class GitServices {
          return userRes.data;
      }
 
-    fetchMergeRequests = async (state: StateOptionType = StateOptionType.ALL): Promise<any> => {
+    fetchMergeRequests = async (state: StateOptionType = StateOptionType.ALL): Promise<Array<MergeRequest> | undefined> => {
         const { projects, apiUrl } = this.config;
-        let allMergeRequests = [];
+        let allMergeRequests = [] as MergeRequest[];
         const user = await this.fetchUser();
 
         if(!user) {
@@ -41,7 +42,7 @@ export class GitServices {
                     ? { author_id: user?.id } // still limit to assigned MRs
                     : { state, author_id: user?.id };
             const response = await axios.get<any[]>(url, { headers:this.headers, params });
-            allMergeRequests.push(...response.data);
+            allMergeRequests.push(...(response.data as MergeRequest[]));
         }
 
         return allMergeRequests;

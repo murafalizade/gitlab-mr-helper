@@ -1,8 +1,8 @@
 import { Command } from "commander";
-import { setToken, setUrl, setBranches } from "./libs/config.ts";
-import {showMergeList} from "./commands/show-merge-list.ts";
-import {trackDiffBranch} from "./commands/track-diff-branch.ts";
-import {StateOptionType} from "./types/state-option.type.ts";
+import { setToken, setUrl, setBranches } from "./libs/config";
+import {showMergeList} from "./commands/show-merge-list";
+import {trackDiffBranch} from "./commands/track-diff-branch";
+import {StateOptionType} from "./types/state-option.type";
 
 const program = new Command();
 
@@ -52,4 +52,4 @@ program
     });
 
 
-program.parseAsync(process.argv).then(() => console.log("Initialization complete."))
+program.parseAsync(process.argv).then(() => console.log("\nProcess completed."))
