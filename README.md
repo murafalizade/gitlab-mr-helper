@@ -7,7 +7,7 @@ A CLI tool to track your GitLab Merge Requests (MRs) across branches (like `dev`
 
 ## ✨ Features
 
-* 🔍 **List your merge requests** by state (`open`, `merged`, `closed`)
+* 🔍 **List your merge requests** by state (`all`, `opened`, `merged`, `closed`)
 * 📊 **Check MR propagation** across a defined branch order (e.g., `dev → test → master`)
 * 🔔 **Optional reminders** if MRs are not yet fully merged to production branches
 
@@ -48,7 +48,7 @@ npx gitlab-mr config set-branches <project_id> dev test master
 * **Open MRs**
 
   ```bash
-  npx gitlab-mr list open
+  npx gitlab-mr list opened
   ```
 
 * **Merged MRs**
