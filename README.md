@@ -36,7 +36,7 @@ npx gitlab-mr config set-token <your_token>
 npx gitlab-mr config set-url https://gitlab.example.com/api/v4
 
 # Set target branch flow for a project (in order of promotion)
-npx gitlab-mr config set-branches <project_id> dev test master
+npx gitlab-mr config set-project <project_id>
 ```
 
 ---

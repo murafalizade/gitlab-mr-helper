@@ -9,5 +9,7 @@ export interface MergeRequest {
     created_at: string;
     sha: string;
     merge_commit_sha: string;
-    draft: boolean
+    draft: boolean;
+    source_branch: string;
+    target_branch: string;
 }

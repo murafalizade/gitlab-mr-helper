@@ -9,7 +9,7 @@ export class GitServices {
 
      constructor() {
          this.config = loadConfig();
-         if(!this.config.apiToken || !this.config.projects){
+         if(!this.config.apiToken || !this.config.projectId){
              throw new Error('No projects or API token configured');
          }
 
@@ -26,8 +26,7 @@ export class GitServices {
      }
 
     fetchMergeRequests = async (state: StateOptionType = StateOptionType.ALL): Promise<Array<MergeRequest> | undefined> => {
-        const { projects, apiUrl } = this.config;
-        let allMergeRequests = [] as MergeRequest[];
+        const { projectId, apiUrl } = this.config;
         const user = await this.fetchUser();
 
         if(!user) {
@@ -35,24 +34,21 @@ export class GitServices {
             return;
         }
 
-        for (const project of Object.keys(projects)) {
-            const url = `${apiUrl}/api/v4/projects/${encodeURIComponent(project)}/merge_requests`;
+            const url = `${apiUrl}/api/v4/projects/${encodeURIComponent(projectId)}/merge_requests`;
             const params =
                 state === StateOptionType.ALL
                     ? { author_id: user?.id } // still limit to assigned MRs
                     : { state, author_id: user?.id };
-            const response = await axios.get<any[]>(url, { headers:this.headers, params });
-            allMergeRequests.push(...(response.data as MergeRequest[]));
-        }
-
-        return allMergeRequests;
+            const response = await axios.get<MergeRequest[]>(url, { headers:this.headers, params });
+        return response.data;
     }
 
-    fetchMergeCommits = async (mr: any): Promise<any[]> => {
-        const {apiUrl} = this.config;
-
-        const url = `${apiUrl}/api/v4/projects/${encodeURIComponent(mr.project_id)}/merge_requests/${mr.iid}/commits`;
-        const res = await axios.get<any[]>(url, { headers:this.headers });
-        return res.data;
-    };
+    async compareBranches(from: string, to: string) {
+        const { projectId, apiUrl } = this.config;
+        const url = `${apiUrl}/api/v4/projects/${encodeURIComponent(projectId)}/repository/compare?from=${from}&to=${to}`;
+        const response = await axios.get(url, {
+            headers: this.headers,
+        });
+        return response.data;
+    }
 }

@@ -29,9 +29,8 @@ configCommand
 
 // Subcommand: config set-branches
 configCommand
-    .command("set-branches")
+    .command("set-project")
     .argument("<projectId>", "Project ID")
-    .argument("<branches...>", "Branch order: dev test master")
     .action(setBranches);
 
 // Register `config` group to main program

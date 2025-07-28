@@ -6,12 +6,12 @@ const configPath = path.resolve(process.cwd(), ".gitlab-mrrc");
 export interface GitlabMRConfig {
     apiToken: string;
     apiUrl: string;
-    projects: Record<string, string[]>;
+    projectId: string;
 }
 
 export function loadConfig(): GitlabMRConfig {
     if (!fs.existsSync(configPath)) {
-        return { apiToken: "", apiUrl: "https://gitlab.com/api/v4", projects: {} };
+        return { apiToken: "", apiUrl: "https://gitlab.com/api/v4", projectId: "" };
     }
     return JSON.parse(fs.readFileSync(configPath, "utf-8"));
 }
@@ -34,9 +34,9 @@ export function setUrl(url: string) {
     console.log("✅ API URL set successfully.");
 }
 
-export function setBranches(projectId: string, branches: string[]) {
+export function setBranches(projectId: string) {
     const config = loadConfig();
-    config.projects[projectId] = branches;
+    config.projectId = projectId;
     saveConfig(config);
-    console.log(`✅ Branch order set for project ${projectId}:`, branches.join(" → "));
+    console.log(`✅ Branch order set for project ${projectId}:`);
 }

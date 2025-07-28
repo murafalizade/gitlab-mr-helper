@@ -1,13 +1,12 @@
-import {StateOptionType} from "../types/state-option.type";
-import {isCommitEffectivelyInBranch} from "../utils/git-operations";
-import {GitServices} from "../utils/git-services";
+import { StateOptionType } from "../types/state-option.type";
+import { GitServices } from "../utils/git-services";
 
-export const trackDiffBranch = async (targetBranch: string, mrId?: string) => {
+export const trackDiffBranch = async (targetBranch: string, mrId?: string, fileFilter?: string) => {
     const git = new GitServices();
     const mrs = await git.fetchMergeRequests(StateOptionType.MERGED);
 
-    if(!mrs || mrs.length === 0) {
-        console.log('No merge requests found.');
+    if (!mrs || mrs.length === 0) {
+        console.log("No merge requests found.");
         return;
     }
 
@@ -16,30 +15,35 @@ export const trackDiffBranch = async (targetBranch: string, mrId?: string) => {
     const result: {
         id: string;
         title: string;
-        exists: boolean;
+        hasDiff: boolean;
     }[] = [];
 
     for (const mr of targetMrList) {
-        const commits = await git.fetchMergeCommits(mr);
-        const allCommitsExist = await Promise.all(
-            commits.map((commit) => {
-                return  isCommitEffectivelyInBranch(commit.id, targetBranch);
-            })
-        );
+        const sourceBranch = mr.source_branch;
+        const compareData = await git.compareBranches(targetBranch, sourceBranch);
+
+        let hasDiff = false;
+
+        if (compareData && compareData.diffs) {
+            if (fileFilter) {
+                hasDiff = compareData.diffs.some((diff: any) => diff.new_path === fileFilter || diff.old_path === fileFilter);
+            } else {
+                hasDiff = compareData.diffs.length > 0;
+            }
+        }
 
         result.push({
             id: mr.iid,
             title: mr.title,
-            exists: allCommitsExist.every(Boolean),
+            hasDiff,
         });
     }
 
-    // Output result
     console.table(
         result.map((r) => ({
             'MR ID': `!${r.id}`,
             Title: r.title,
-            'Exists on Target': r.exists ? '✅ Yes' : '❌ No',
+            'Has Diff in Target': r.hasDiff ? "🔍 Yes" : "✅ No Diff",
         }))
     );
 };
